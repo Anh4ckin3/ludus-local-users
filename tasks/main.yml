@@ -1,0 +1,53 @@
+---
+
+- name: Create Linux users
+  ansible.builtin.user:
+    name: "{{ user.login }}"
+    password: "{{ user.password | password_hash('sha512', 'createusersalt') }}"
+    append: true
+    state: present
+    createhome: true
+  loop: "{{ local_users }}"
+  loop_control:
+    loop_var: user
+  when: "ansible_system == 'Linux'"
+
+- name: Add Linux users to groups when necessary
+  ansible.builtin.user:
+    name: "{{ user.login }}"
+    state: present
+    groups: "{{ user.groups }}"
+  loop: "{{ local_users }}"
+  loop_control:
+    loop_var: user
+  when: "ansible_system == 'Linux' and user.groups is defined"
+
+- name: Configure passwordless sudo when necessary
+  copy:
+    dest: "/etc/sudoers.d/80-nopasswd-{{ user.login }}"
+    content: "{{ user.login }} ALL=(ALL) NOPASSWD:ALL"
+    mode: 0440
+  loop: "{{ local_users }}"
+  loop_control:
+    loop_var: user
+  when: "ansible_system == 'Linux' and user.sudo_nopasswd is true"
+
+- name: Create Windows users
+  ansible.windows.win_user:
+    name: "{{ user.login }}"
+    state: present
+    password: "{{ user.password }}"
+  loop: "{{ local_users }}"
+  loop_control:
+    loop_var: user
+  when: "ansible_system == 'Win32NT'"
+
+- name: "Add Windows users to local groups"
+  ansible.windows.win_group_membership:
+    name: "{{ group.name }}"
+    members: "{{ group.members }}"
+    state: present
+  loop: "{{ local_groups }}"
+  loop_control:
+    loop_var: group
+  when: "ansible_system == 'Win32NT'"

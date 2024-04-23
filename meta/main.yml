@@ -1,0 +1,20 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: local-users
+  author: cyblexconsulting
+  description: Manage local users and groups on a Linux or Windows host
+  company: Cyblex Consulting
+  license: GPLv3
+  min_ansible_version: "2.10"
+  platforms:
+    - name: Linux
+      versions:
+      - all
+    - name: Windows
+      versions:
+      - all
+  galaxy_tags:
+    - linux
+    - windows
