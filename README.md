@@ -1,22 +1,53 @@
-Ludus Role: Local users and groups
-=========
+# Ansible Role: Local users and groups (Ludus)
 
-This is a role for Ludus that manages local users and groups for Windows or Linux
+An Ansible Role that creates local users on Windows or Linux and manages local groups.
 
 The role performs the following actions:
 - Create Linux users
-- Add Linux users to groups
+- Add Linux users to groups (when creating a user)
 - Configure passwordless sudo configuration
 - Create Windows users
 - Add Windows users to groups
 
+> [!WARNING]
+> At the moment, the role does not support modifying group membership of already existing Linux users.
 
-Role Variables
---------------
+## Requirements
 
-There is no default values. Everything shall be configured in the range configuration.
+None.
 
-A full Linux VM may look like this in the range configuration:
+## Role Variables
+
+Available variables are listed below. There is no default values. Everything shall be configured in the range configuration.
+
+### Variables used when creating a user :
+
+    # User login
+    ludus_local_users.login: jdoe
+
+    # User password
+    ludus_local_users.password: aA8MaQBCtBtPYAFh
+
+    # Optional (Linux Only): Groups to put the user into. In case of multiple groups, user comma separated list
+    ludus_local_users.groups: sudo,adm
+
+    # Optional (Linux Only): Whether to set NOPASSWD in sudoers configuration for the created Linux user
+    ludus_local_users.sudo_nopasswd: true
+
+### Variables used when modifying local groups (Windows Only)
+
+    # Group to modify
+    ludus_local_users.name: jdoe
+
+    # List of accounts or groups to add to the local group
+    ludus_local_users.members: 
+      - my_local_user
+      - MYRANGE\Developers
+      - MYRANGE\Tier 1 Admins
+
+## Example Ludus Range Config
+
+### Linux VM
 
 ```yaml
   - vm_name: "{{ range_id }}-GIT-01"
@@ -35,7 +66,7 @@ A full Linux VM may look like this in the range configuration:
     roles:
       - local-users
     role_vars:
-      local_users:
+      ludus_local_users:
         - login: jdoe
           password: aA8MaQBCtBtPYAFh
           groups: sudo
@@ -44,7 +75,7 @@ A full Linux VM may look like this in the range configuration:
           password: 25H60eORSggFfH2Y
 ```
 
-A full Windows VM may look like this in the range configuration:
+### Windows VM
 
 ```yaml
     hostname: "{{ range_id }}-TSE-01"
@@ -64,10 +95,10 @@ A full Windows VM may look like this in the range configuration:
     roles:
       - local-users
     role_vars:
-      local_users:
+      ludus_local_users:
         - login: local-adm
           password: 5tB2RgjjI7kdEXHC
-      local_groups:
+      ludus_local_groups:
         - name: Administrators
           members:
             - local-adm
@@ -76,3 +107,11 @@ A full Windows VM may look like this in the range configuration:
             - MYRANGE\Developers
             - MYRANGE\Tier 1 Admins
 ```
+
+## License
+
+GPLv3
+
+## Author Information
+
+This role was created by [Cyblex Consulting](https://github.com/Cyblex-Consulting), for [Ludus](https://ludus.cloud/).

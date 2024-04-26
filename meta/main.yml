@@ -2,19 +2,31 @@
 dependencies: []
 
 galaxy_info:
-  role_name: local-users
-  author: cyblexconsulting
-  description: Manage local users and groups on a Linux or Windows host
+  role_name: ludus_local_users
+  author: tigre-bleu
+  description: An Ansible Role that creates local users on Windows or Linux and manages local groups.
   company: Cyblex Consulting
   license: GPLv3
   min_ansible_version: "2.10"
   platforms:
-    - name: Linux
+    - name: Windows 
       versions:
-      - all
-    - name: Windows
+        - "2012R2"
+        - "2016"
+        - "2019"
+        - "2022"
+    - name: Debian
       versions:
-      - all
+        - buster
+        - bullseye
+        - bookworm
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
+        - jammy
   galaxy_tags:
     - linux
     - windows
+
+collections: [] # Add any collections needed here
