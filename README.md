@@ -64,7 +64,7 @@ Available variables are listed below. There is no default values. Everything sha
       snapshot: true
       block_internet: false
     roles:
-      - local-users
+      - ludus_local_users
     role_vars:
       ludus_local_users:
         - login: jdoe
@@ -93,7 +93,7 @@ Available variables are listed below. There is no default values. Everything sha
       snapshot: true
       block_internet: true
     roles:
-      - local-users
+      - ludus_local_users
     role_vars:
       ludus_local_users:
         - login: local-adm
