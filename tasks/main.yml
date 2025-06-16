@@ -51,3 +51,15 @@
   loop_control:
     loop_var: group
   when: "ansible_system == 'Win32NT'"
+
+# Disable Windows users
+- name: Disable Windows users
+  ansible.windows.win_user:
+    name: "{{ user.login }}"
+    account_disabled: true
+    password: "{{ user.password }}"
+  loop: "{{ ludus_local_users }}"
+  loop_control:
+    loop_var: user
+  when: "ansible_system == 'Win32NT' and user.disabled | default(false)"
+
